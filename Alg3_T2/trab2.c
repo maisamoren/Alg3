@@ -79,29 +79,31 @@ void freeTrie(TrieNode *node) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "Uso: %s <arquivo_base> <arquivo_texto>\n", argv[0]);
-        return EXIT_FAILURE;
-    }
 
-    FILE *baseFile = fopen(argv[1], "a+"); // Abre o arquivo da base em modo de leitura e escrita
+    // printf ("entrou aqui\n");
+
+    FILE *baseFile = fopen("ENEIDA.ini", "r"); 
+
+    // printf ("entrou aqui\n");
+
     if (!baseFile) {
         fprintf(stderr, "Erro ao abrir o arquivo da base\n");
-        return EXIT_FAILURE;
+        return 1;
     }
 
-    TrieNode *root = createNode(); // Cria a raiz da árvore
+    TrieNode *root = createNode(); 
 
-    // Leitura do arquivo da base e construção da árvore
     char word[MAX_WORD_LENGTH];
+
     while (fscanf(baseFile, "%s", word) == 1) {
         char file[MAX_WORD_LENGTH];
+        // printf ("entrou aqui");
         fscanf(baseFile, "%s", file);
         insere(root, word, file);
     }
 
-    // Leitura do arquivo de texto e inserção na base
-    FILE *textFile = fopen(argv[2], "r");
+    FILE *textFile = fopen("saida.txt", "r");
+
     if (textFile) {
         while (fscanf(textFile, "%s", word) == 1) {
             insere(root, word, argv[2]);
@@ -109,14 +111,11 @@ int main(int argc, char *argv[]) {
         fclose(textFile);
     }
 
-    // Escrita da árvore modificada de volta para o arquivo da base
     freopen(argv[1], "w", baseFile);
     fclose(baseFile);
 
-    // Busca por palavras com um determinado prefixo
-    procura(root, "pre"); // Substitua "pre" pelo prefixo desejado
+    procura(root, "pre");
 
-    // Libera a memória alocada para a árvore
     freeTrie(root);
 
     return 0;
