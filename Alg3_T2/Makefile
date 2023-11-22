@@ -1,19 +1,19 @@
 CFLAGS = -Wall -g -std=c99
 
-all: busca
+all: mytrie
 
-busca: busca.o avl-tree.o
-	gcc $(CFLAGS) busca.o avl-tree.o -o busca 
+mytrie: trab2.o 
+	gcc $(CFLAGS) trab2.o -o trab2 
 
-busca.o: busca.c avl-tree.h 
-	gcc $(CFLAGS) -c busca.c 
+trab2.o: trab2.c 
+	gcc $(CFLAGS) -c trab2.c 
 
-avl-tree.o: avl-tree.c avl-tree.h
-	gcc $(CFLAGS) -c avl-tree.c 
+# trie.o: trie.c trie.h
+# 	gcc $(CFLAGS) -c trie.c 
 
 clean:
 	rm -rf ./*.o
 	 
 purge: clean
-	rm -rf busca
+	rm -rf mytrie
 
