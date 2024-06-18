@@ -17,7 +17,7 @@ void entrada () {
     printf("b. Calcula o valor mínimo das chaves de uma árvore binária;\n");
     printf("c. Alteração da árvoe binária para que o valor de um nó pai seja igual que o valor de seu maior filho;\n");
     printf("d. Multiplicamos a quantidade de nós da árvore binária;\n");
-    printf("e. Alteração nos valores de uma árvore binária, de maneira wque o maior valor fique na raiz;\n");
+    printf("e. Alteração nos valores de uma árvore binária, de maneira que o maior valor fique na raiz;\n");
     printf("f. Alteração em uma árvore binária de maneira que cada nó tenha o maior valor dos seus filhos, mantendo todas as chaves na árvore;\n");
     printf("g. Para imprimir a árvore binária;\n");
     printf("z. Para sair do programa.\n");
@@ -54,6 +54,32 @@ int main () {
             printf("\n\n");
         }
 
+        if (opcao == 'b'){
+            int min;
+            min = valorMinimo(raiz);
+            printf("\n\nO valor mínimo das chaves que estão na árvore é: %d", min);
+        }
+
+        if (opcao == 'c'){
+            paiMaior(raiz);
+            printf("\n\nO valor foi alterado. Para vizualizar, escolha a opção de imprimir a árvore.");
+        }
+
+        if (opcao == 'd'){
+            Nodo *novaRaiz;
+            novaRaiz = dobraArvore(raiz); 
+            printf("\n\nA árvore agora está alterada, com o dobro de nós. A impressão da árvore segue a ordem - esquerda, raiz, direita:");
+            emOrdem(novaRaiz); 
+        }
+
+        if (opcao == 'e'){
+            maiorNaRaiz(); 
+        }
+
+        if (opcao == 'f'){
+            //
+        }
+
         if (opcao == 'g'){
             printf("A impressão da árvore binária segue a ordem - esquerda, raiz, direita:");
             emOrdem(raiz);
@@ -63,6 +89,7 @@ int main () {
         scanf("%c", &opcao);
     }
 
+    printf("\nObrigado por usar esse programa! Até mais.");
 
     // entrada();
     // scanf("%d", &opcao);
