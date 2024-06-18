@@ -15,20 +15,26 @@ typedef struct Nodo {
     struct Nodo *esq, *dir;
 } Nodo;
 
-Nodo *novoNo (int item);
+Nodo *novoNo(int item);
 
-Nodo *criaArv (int chaves[], int n);
+Nodo *criaArv(int chaves[], int n);
 
-void emOrdem (Nodo *n);
+void emOrdem(Nodo *n);
 
-int somaChave (Nodo *raiz);
+int somaChave(Nodo *raiz);
 
-int valorMinimo(Nodo* raiz);
+int valorMinimo(Nodo *raiz);
 
-void paiMaior (Nodo *raiz);
+void paiMaior(Nodo *raiz);
 
-Nodo *dobraArvore (Nodo *raiz);
+Nodo *dobraArvore(Nodo *raiz);
 
-// maiorNaRaiz ()
+void maxHeapify(Nodo *raiz);
+
+void maiorNaRaiz(Nodo *raiz);
+
+void heapifyInvertido(Nodo *raiz);
+
+void ordenaPeloMaior(Nodo *raiz);
 
 #endif
