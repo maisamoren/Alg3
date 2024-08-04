@@ -232,18 +232,16 @@ int palavrasSemelhantes (nodeTrie *nodo, char *key, int letraAtual, int totalLet
         }
 
         // Chamadas de recursividade para achar palavras semelhantes buscando por todas possibilidades
-        else{
-            for (int i = 0; i < MAX; i++) {
-                if (nodo->childNode[i] != NULL) {
-                    // Chamada para proxima letra da trie apenas
-                    contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual, totalLetras, errosMax, errosAtual);
-                    // Chamada para proxima letra da trie e do vetor
-                    contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual + 1, totalLetras, errosMax, errosAtual);
-                }
+        for (int i = 0; i < MAX; i++) {
+            if (nodo->childNode[i] != NULL) {
+                // Chamada para proxima letra da trie apenas
+                contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual, totalLetras, errosMax, errosAtual);
+                // Chamada para proxima letra da trie e do vetor
+                contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual + 1, totalLetras, errosMax, errosAtual);
             }
-            // Chamada para proxima letra do vetor apenas
-            contagem = contagem + palavrasSemelhantes(nodo, key, letraAtual + 1, totalLetras, errosMax, errosAtual);
         }
+        // Chamada para proxima letra do vetor apenas
+        contagem = contagem + palavrasSemelhantes(nodo, key, letraAtual + 1, totalLetras, errosMax, errosAtual);
     }
 
     return contagem;
