@@ -142,7 +142,7 @@ int diferencaTamanhoPalavras (nodeTrie *nodo, char *key, int totalLetras) {
     return (tamanhoNodo - totalLetras);
 }
 
-// Descobre o caracter do nodo atual
+// Descobre o caracter do nodo atual, retorna 1 se der errado
 char caracterAtual (nodeTrie *nodo) {
 
     nodeTrie *aux = nodo->root;
@@ -152,7 +152,7 @@ char caracterAtual (nodeTrie *nodo) {
             return i + 'a';
     }
     
-       
+    return 1;   
 }
 
 // Imprime palavras encontradas
