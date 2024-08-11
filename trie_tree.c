@@ -49,10 +49,17 @@ int searchTrie (nodeTrie *root, char *key) {
 void insertTrie (nodeTrie *root, char *key) {
 
     nodeTrie *current = root;
+
+    for (int i = 0; i < strlen(key); i++){
+        // Verifica se nao ha caracteres especiais, se houver ela nao eh inserida na trie
+        if ((key[i] <= 64) || (key[i] >= 91 && key[i] <= 96) || (key[i] >= 123))
+            return; 
+    }
     
     for (int i = 0; key[i] != '\0'; i++) {
         char c = key[i];
-        if (current->childNode[c-'a'] == NULL) {
+        // Converte letras maiúsculas e minusculas para o indice certo
+        if ((current->childNode[c-'a'] == NULL) || (current->childNode[c-'A'] == NULL))  {
             nodeTrie *new = createNode();
             new->root = current;
             current->childNode[c-'a'] = new;
