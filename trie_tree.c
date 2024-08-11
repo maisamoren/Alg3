@@ -58,13 +58,21 @@ void insertTrie (nodeTrie *root, char *key) {
     
     for (int i = 0; key[i] != '\0'; i++) {
         char c = key[i];
+        int x;
         // Converte letras maiúsculas e minusculas para o indice certo
-        if ((current->childNode[c-'a'] == NULL) || (current->childNode[c-'A'] == NULL))  {
+        if (((current->childNode[c-'a'] == NULL) && (c -'a' < MAX)) || ((current->childNode[c-'A'] == NULL) && (c - 'A' < MAX))) {              
             nodeTrie *new = createNode();
             new->root = current;
-            current->childNode[c-'a'] = new;
+            if (c - 'A' < MAX) {
+                current->childNode[c-'A'] = new;
+                x = c - 'A';
+            }
+            else {
+                current->childNode[c-'a'] = new;
+                x = c - 'a';
+            }
         }
-        current = current->childNode[c-'a'];
+        current = current->childNode[x];
     }
     
     current->wordEnd = 1;
