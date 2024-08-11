@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 #define MAX 26 
+#define MAX_WORD 100
+#define MAX_LISTA 20
 
 typedef struct nodeTrie {
     int wordEnd;
@@ -33,7 +36,7 @@ int searchTrie (nodeTrie *root, char *key) {
 
         // verifica se o nó existe para o char atual na árvore
         if (aux->childNode[c-'a'] == NULL) {
-            return false; // palavra n existe na trie
+            return 0; // palavra n existe na trie
         }
 
         // move o ponteiro aux para o nó já existente para o chat atual
@@ -137,12 +140,11 @@ int diferencaTamanhoPalavras (nodeTrie *nodo, char *key, int totalLetras) {
         auxiliar = auxiliar->root;
     }
 
-    // tamanhoKey = strlen(key);
     // retorna a subtracao de ambos valores encontrados
     return (tamanhoNodo - totalLetras);
 }
 
-// Descobre o caracter do nodo atual, retorna 1 se der errado
+// Descobre o caracter do nodo atual
 char caracterAtual (nodeTrie *nodo) {
 
     nodeTrie *aux = nodo->root;
@@ -151,12 +153,10 @@ char caracterAtual (nodeTrie *nodo) {
         if (aux->childNode[i] == nodo)
             return i + 'a';
     }
-    
-    return 1;   
 }
 
 // Imprime palavras encontradas
-void imprimePalavraAchada (nodeTrie *nodo, int errosAtual) {
+void imprimePalavraAchada (nodeTrie *nodo, FILE *outputFile, int contagem) {
     
     int tamanhoNodo, preencheNodo;
     nodeTrie *auxiliar;
@@ -164,6 +164,10 @@ void imprimePalavraAchada (nodeTrie *nodo, int errosAtual) {
 
     tamanhoNodo = 1;
     auxiliar = nodo;
+
+    if (contagem >= MAX_LISTA) {
+        return;
+    }
     
     // Calcula o tamanho da palavra encontrada na trie
     while (auxiliar->root != NULL) {
@@ -186,11 +190,10 @@ void imprimePalavraAchada (nodeTrie *nodo, int errosAtual) {
 
     // Imprime a palavra encontrada
     for (int i = 0; i < tamanhoNodo; i++){
-        printf ("%c", vetorAuxiliar[i]);
+        fprintf(outputFile, "%c", vetorAuxiliar[i]);
     }
 
-    // Imprime os erros totais 
-    printf (", %d\n", errosAtual);
+    fprintf(outputFile, ",");
 
     // Desaloca vetor utilizado
     free (vetorAuxiliar);
@@ -200,15 +203,12 @@ void imprimePalavraAchada (nodeTrie *nodo, int errosAtual) {
 
 // Verifica se as letras sao iguais
 int verificaIgualdadeLetra (char key1, char key2){
-    if (key1 == key2)
+    if ((key1 == key2) || (key1 == key2 + 32))
         return 1;
     return 0;
 }
 
-int palavrasSemelhantes (nodeTrie *nodo, char *key, int letraAtual, int totalLetras, int errosMax, int errosAtual){
-
-    // Contador para saber quantas palavras semelhantes foram encontradas
-    int contagem = 0;
+int palavrasSemelhantes (nodeTrie *nodo, char *key, int letraAtual, int totalLetras, int errosMax[], int errosAtual, FILE *outputFile, int contagem) {
 
     // If de seguranca para garantir que nao entre em locais da memoria indevidos (seja um nodo nulo ou um fim de vetor que nao existe)
     if ((nodo == NULL) || (letraAtual > totalLetras)) {
@@ -226,35 +226,97 @@ int palavrasSemelhantes (nodeTrie *nodo, char *key, int letraAtual, int totalLet
         if (nodo->wordEnd == 1){
             int errosAgora = errosAtual + diferencaTamanhoPalavras(nodo, key, totalLetras);
             if (errosAgora <= errosMax){
+                imprimePalavraAchada(nodo, outputFile, contagem);
                 contagem++;
-                imprimePalavraAchada(nodo, errosAgora);
             }
         }
 
         // Chamadas de recursividade para achar palavras semelhantes buscando por todas possibilidades
-        for (int i = 0; i < MAX; i++) {
-            if (nodo->childNode[i] != NULL) {
-                // Chamada para proxima letra da trie apenas
-                contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual, totalLetras, errosMax, errosAtual);
-                // Chamada para proxima letra da trie e do vetor
-                contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual + 1, totalLetras, errosMax, errosAtual);
+        else{
+            for (int i = 0; i < MAX; i++) {
+                if (nodo->childNode[i] != NULL) {
+                    // Chamada para proxima letra da trie apenas
+                    contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual, totalLetras, errosMax, errosAtual, outputFile, contagem);
+                    // Chamada para proxima letra da trie e do vetor
+                    contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual + 1, totalLetras, errosMax, errosAtual, outputFile, contagem);
+                }
             }
+            // Chamada para proxima letra do vetor apenas
+            contagem = contagem + palavrasSemelhantes(nodo, key, letraAtual + 1, totalLetras, errosMax, errosAtual, outputFile, contagem);
         }
-        // Chamada para proxima letra do vetor apenas
-        contagem = contagem + palavrasSemelhantes(nodo, key, letraAtual + 1, totalLetras, errosMax, errosAtual);
     }
 
     return contagem;
 }
 
+void loadWords (nodeTrie *root, const char *filename) {
+    
+    FILE *file = fopen(filename, "r");
+
+    // Verifica se o arquivo foi aberto corretamente
+    if (file == NULL) {
+        perror("Unable to open file");
+        exit(EXIT_FAILURE);
+    }
+    
+    char word[MAX_WORD]; // Buffer para armazenar cada palavra lida
+    
+    while (fscanf(file, "%99s", word) != EOF) {
+        insertTrie(root, word); // Insere a palavra lida na TRIE
+    }
+    
+    fclose(file);
+}
+
+void process (nodeTrie *root, const char *filename) {
+    
+    FILE *file = fopen(filename, "r");
+    
+    if (file == NULL) {
+        perror("Unable to open file");
+        exit(EXIT_FAILURE);
+    }
+
+    // Abre o arquivo de saída para escrita
+    FILE *outputFile = fopen("saida.txt", "w");
+    if (outputFile == NULL) {
+        perror("Unable to open output file");
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
+    
+    char word[MAX_WORD]; // Buffer para armazenar cada palavra da consulta
+    int errosMax[1];
+
+    // Lê as consultas do arquivo uma por uma
+    while (fscanf(file, "%99s %d", word, errosMax) != EOF) {
+
+        for (int i = 0; i < strlen(word); i++){
+            fprintf (outputFile, "%c", word[i]);
+        }
+
+        fprintf (outputFile, ":");
+        
+        // Busca palavras na árvore que estejam a uma distância de edição especificada
+        palavrasSemelhantes(root, word, 0, strlen(word), errosMax[0], 0, outputFile, 0);
+        
+        fprintf (outputFile, "\n");
+    }
+    
+    // Fecha os arquivos após a leitura e escrita
+    fclose(file);
+    fclose(outputFile);
+}
+
 int main () {
 
-    // printf("\n\n BEM VINDO\n\n");
+    nodeTrie *Tree; 
+    Tree = createNode();
 
-    //nodeTrie *Tree; 
-    //Tree = createNode();
+    loadWords(Tree, "entrada.txt");
+    process(Tree, "consultas.txt");
 
-    printf("%c\n", 3 + 'a');
+    // printf("%c\n", 3 + 'a');
     
     return 0;
 }
