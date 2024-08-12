@@ -13,7 +13,7 @@ int main () {
     tree = createNode();
 
     loadWords(tree, "entrada.txt");
-    process(tree, "consultas.txt");
+    consultar(tree, "consultas.txt");
 
     deleteTrieTree (tree);
 
