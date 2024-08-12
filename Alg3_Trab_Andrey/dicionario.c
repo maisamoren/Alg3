@@ -1,6 +1,3 @@
-#ifndef __DICIONARIO__
-#define __DICIONARIO__
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +5,7 @@
 #include <ctype.h>
 
 #include "dicionario.h"
+#include "trie.h"
 
 // Descobre o caracter do nodo atual
 char caracterAtual (nodeTrie *nodo) {
@@ -20,13 +18,13 @@ char caracterAtual (nodeTrie *nodo) {
 
     for (int i = 0; i < MAX; i++){
         if (aux->childNode[i] == nodo){
-            return i + volta;
-        }
+            return i + volta;}
     }
 
     return '?';
 }
 
+//
 void inverterVetor (char vetor[]) {
     int x = strlen(vetor) - 1;
 
@@ -39,19 +37,16 @@ void inverterVetor (char vetor[]) {
     }
 }
 
-// Imprime palavras encontradas
-void imprimePalavraAchada (nodeTrie *nodo, FILE *outputFile, int contagem) {
 
-    int tamanhoNodo, preencheNodo;
+// Imprime palavras encontradas
+void imprimePalavraAchada (nodeTrie *nodo, FILE *outputFile, int x) {
+
+    int tamanhoNodo;
     nodeTrie *auxiliar;
     char *vetorAuxiliar;
 
     tamanhoNodo = 0;
     auxiliar = nodo;
-
-    if (contagem >= MAX_LISTA) {
-        return;
-    }
 
     // Calcula o tamanho da palavra encontrada na trie
     while (auxiliar->root != NULL) {
@@ -59,8 +54,13 @@ void imprimePalavraAchada (nodeTrie *nodo, FILE *outputFile, int contagem) {
         auxiliar = auxiliar->root;
     }
 
-    // Aloca memória para o vetor auxiliar com tamanho encontrado anteriormente
-    vetorAuxiliar = calloc (tamanhoNodo, sizeof(char));
+    // if para nao colocar a virgula antes da primeira palavra
+    if (x > 0){
+        fprintf(outputFile, ",");
+    }
+
+    // Aloca memória para o vetor auxiliar com o máximo possível para evitar possíveis erros na memória
+    vetorAuxiliar = calloc (MAX_WORD, sizeof(char));
 
     auxiliar = nodo;
 
@@ -77,8 +77,6 @@ void imprimePalavraAchada (nodeTrie *nodo, FILE *outputFile, int contagem) {
         fprintf(outputFile, "%c", vetorAuxiliar[i]);
     }
 
-    fprintf(outputFile, ",");
-
     // Desaloca vetor utilizado
     free (vetorAuxiliar);
 
@@ -94,12 +92,13 @@ int verificaIgualdadeLetra (char key1, char key2) {
     return 0;
 }
 
-int palavrasSemelhantes (nodeTrie *nodo, char *key, int letraAtual, int totalLetras, int errosMax, int errosAtual, FILE *outputFile, int contagem) {
+int palavrasSemelhantes (nodeTrie *nodo, char *key, int letraAtual, int totalLetras, int errosMax, int errosAtual, FILE *outputFile, nodeTrie *vetor[], int *x) {
 
     // If de seguranca para garantir que nao entre em locais da memoria indevidos (seja um nodo nulo )
     if (nodo == NULL) {
         return 0;
     }
+
 
     // Verifica se a letra atual da palavra eh igual a letra da arvore
     if (verificaIgualdadeLetra(caracterAtual(nodo), key[letraAtual]) != 1)
@@ -112,13 +111,16 @@ int palavrasSemelhantes (nodeTrie *nodo, char *key, int letraAtual, int totalLet
         if (nodo->wordEnd == 1) {
             int errosAgora = errosAtual + (totalLetras - letraAtual - 1);
             if (errosAgora <= errosMax) {
-                imprimePalavraAchada(nodo, outputFile, contagem);
-                contagem++;
+                imprimePalavraAchada(nodo, outputFile, *x);
+                if (*x < MAX_LISTA){
+                    nodo->wordEnd = 0;
+                    vetor[*x] = nodo;
+                    *x = *x + 1;
+                }
             }
         }
-
         for (int i = 0; i < MAX; i++) {            
-            contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual + 1, totalLetras, errosMax, errosAtual, outputFile, contagem);
+            palavrasSemelhantes(nodo->childNode[i], key, letraAtual + 1, totalLetras, errosMax, errosAtual, outputFile, vetor,x);
         }
 
         // Chamadas de recursividade para achar palavras semelhantes buscando por todas possibilidades
@@ -127,19 +129,16 @@ int palavrasSemelhantes (nodeTrie *nodo, char *key, int letraAtual, int totalLet
             for (int i = 0; i < MAX; i++) {
                 if (nodo->childNode[i] != NULL) {
                     // Chamada para proxima letra da trie apenas
-                    contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual, totalLetras, errosMax, errosAtual, outputFile, contagem);
-                } else {
-                    // Chamada para proxima letra do vetor apenas
-                    contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual + 1, totalLetras, errosMax, errosAtual, outputFile, contagem);
+                    palavrasSemelhantes(nodo->childNode[i], key, letraAtual, totalLetras, errosMax, errosAtual, outputFile, vetor,x);
                 }
             }
-            /* // Chamada para proxima letra do vetor apenas
-            contagem = contagem + palavrasSemelhantes(nodo, key, letraAtual + 1, totalLetras, errosMax, errosAtual, outputFile, contagem); */
+            // Chamada para proxima letra do vetor apenas
+            palavrasSemelhantes(nodo, key, letraAtual + 1, totalLetras, errosMax, errosAtual, outputFile, vetor,x);
         }
 
     }
 
-    return contagem;
+    return 0;
 }
 
 void loadWords (nodeTrie *root, const char *filename) {
@@ -164,6 +163,7 @@ void loadWords (nodeTrie *root, const char *filename) {
 void consultar (nodeTrie *root, const char *filename) {
 
     FILE *file = fopen(filename, "r");
+
 
     if (file == NULL) {
         perror("Erro ao abrir o arquivo.");
@@ -190,10 +190,29 @@ void consultar (nodeTrie *root, const char *filename) {
 
         fprintf (outputFile, ":");
 
-        // Busca palavras na árvore que estejam a uma distância de edição especificada
-        palavrasSemelhantes(root, word, 0, strlen(word), errosMax, 0, outputFile, 0);
+        // Vetor para salvar endereço da ultima letra de cada palavra
+        nodeTrie *vetorAuxiliar[MAX_LISTA];
 
+        for (int i = 0; i < MAX_LISTA; i++)
+            vetorAuxiliar[i] = NULL;
+
+        // Variavel para contar quantas palavras foram encontradas
+        int x = 0;
+
+
+        // Busca palavras na árvore que estejam a uma distância de edição especificada
+        for (int i = 0; i < MAX; i++){
+            palavrasSemelhantes(root->childNode[i], word, 0, strlen(word), errosMax, 0, outputFile, vetorAuxiliar, &x);
+        }
+
+        // Retransformando o WordEnd em 1
+        for (int i = 0; i < x; i++){
+            vetorAuxiliar[i]->wordEnd = 1;
+        }
+
+    
         fprintf (outputFile, "\n");
+
     }
 
     // Fecha os arquivos após a leitura e escrita
