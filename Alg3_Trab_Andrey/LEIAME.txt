@@ -7,16 +7,18 @@ Professor: Andrey Ricardo Pimentel
 
 ------------------------------------------------------------------------------
 
-Este trabalho foi feito visando aplicar os conceitos de uma árvore Trie N-ária, vistos em sala de aula junto aos slides do professor. 
+Este trabalho foi desenvolvido com o objetivo de aplicar os conceitos de uma árvore Trie N-ária, utilizando a linguagem C, conforme apresentados em sala de aula e nos slides do professor. 
 
-Como pedido no enunciado do trabalho, deveriamos, além de implementar as operações básicas da árvore (busca, inserção e remoção), calcular a distância de edição entre duas strings. 
+Como solicitado no enunciado do trabalho, além de implementar as operações básicas da árvore (busca, inserção e remoção), deveríamos calcular a distância de edição entre duas strings. Para isso, utilizamos duas bibliotecas auxiliares: "trie.c" e "dicionario.c". A primeira contém as funções básicas e auxiliares de operação da árvore, enquanto a segunda implementa funções auxiliares para o cálculo da distância de edição. As constantes e estruturas (structs) necessárias foram declaradas na biblioteca "trie.h".
 
-Inicialmente criamos a árvore Trie por meio da função "createNode()" e logo abrimos os arquivos de entrada ("entrada.txt" e "consultas.txt") por meio das funções "loadWords()" e "process()". A primeira delas tem como objetivo ler e inserir as palavras na árvore Trie, com auxílio da função "insertTrie()". Já na segunda função, lemos as palavras que compararemos as distâncias de edições e com o auxílio da função "palavrasSemelhantes()".
+Inicialmente, criamos a árvore Trie por meio da função "createNode()" e, logo em seguida, abrimos os arquivos de entrada ("entrada.txt" e "consultas.txt") por meio das funções "loadWords()" e "consultar()". A função "loadWords()" tem como objetivo ler e inserir as palavras na árvore Trie, com auxílio da função "insertTrie()". Já a segunda função realiza a leitura das palavras que serão comparadas quanto à distância de edição, utilizando a função "palavrasSemelhantes()".
 
-A função recursiva "palavrasSemelhantes()" primeiramente verifica questões de segurança (linha 239), depois verifica se as letras são iguais e, caso o número de erros que aconteceram for maior que o passado no arquivo "consultas.txt" então entramos em algumas verificações por meio de ifs e elses. Além disso, essa função usa outras funções auxiliares, como: "verificaIgualdadeLetra()", "caracterAtual()", "diferencaTamanhoPalavras()" e "imprimePalavraAchada()".
+A função recursiva "palavrasSemelhantes()" (implementada na biblioteca "dicionario.c") começa realizando verificações de segurança (linha 99) e, em seguida, compara as letras das palavras. Caso o número de erros acumulados ultrapasse o limite previamente estabelecido no arquivo "consultas.txt", então a função faz uso de outras funções auxiliares, como: "verificaIgualdadeLetra()", "caracterAtual()", "imprimePalavraAchada()" e "inverterVetor()".
 
-Nosso trabalho, ignora palavras que contém caracteres especiais (como acentos, cedilhas, entre outros), pois seguimos orientações vindas do professor, em sala de aula. Durante a criação, nossas maiores dificuldades foram, inicialmente, no backtracking realizado na função "palavrasSemelhantes()" porém de acordo com testes e análises pudemos entender os bugs e erros. Logo após, enquanto debugavamos, encontramos dificuldades na lógica que foram resolvidas depois de muito esforço.
+Essas funções auxiliares desempenham os seguintes papéis, respectivamente: verifica se duas letras são iguais, retornando 1 se sim e 0 caso contrário; identifica o caracter atual do nodo visando comparar as letras; imprime as palavras encontradas na árvore Trie que tem a distância de edição especificada no "consultas.txt"; e, por último, reconstrói a palavra invertida, de trás pra frente, para que a mesma seja impressa de maneira correta.
 
-Desde já, agradecemos o seu tempo lendo este arquivo e analisando nosso código,
+Seguindo as orientações do professor em sala de aula, optamos por ignorar palavras que contenham caracteres especiais (como acentos e cedilhas). Durante o desenvolvimento do trabalho, a maior dificuldades que enfretamos, inicialmente, foi na implementação do backtracking, na função "palavrasSemelhantes()". Entretanto, após diversos testes e análises, pudemos identificar e corrigir os bugs e erros. Também encontramos desafios na lógica de algumas operações durante o processo de debugação, que foram resolvidos com bastante esforço. Utilizamos o exemplo fornecido no enunciado para testar nosso programa, o que nos ajudou a identificar casos corretos e ajustar nosso código.
+
+Agradecemos desde já por dedicar seu tempo para ler este relatóro e analisar nosso código,
 
 Victor e Maisa.
