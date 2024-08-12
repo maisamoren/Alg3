@@ -20,7 +20,8 @@ char caracterAtual (nodeTrie *nodo) {
 
     for (int i = 0; i < MAX; i++){
         if (aux->childNode[i] == nodo){
-            return i + volta;}
+            return i + volta;
+        }
     }
 
     return '?';
