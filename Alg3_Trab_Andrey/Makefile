@@ -1,9 +1,9 @@
 CFLAGS = -Wall -g -std=c99
 
-all: dicionario
+all: main
 
-dicionario: trie.o dicionario.o
-	gcc $(CFLAGS) trie.o dicionario.o -o dicionario -ltinfo
+main: trie.o dicionario.o
+	gcc $(CFLAGS) trie.o dicionario.o -o main -ltinfo
 
 trie.o : trie.c trie.h
 	gcc $(CFLAGS) -c trie.c -ltinfo
@@ -15,4 +15,4 @@ clean:
 	rm -rf ./*.o
 	 
 purge: clean
-	rm -rf dicionario
+	rm -rf main
