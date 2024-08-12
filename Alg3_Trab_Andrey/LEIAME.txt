@@ -15,10 +15,8 @@ Inicialmente criamos a árvore Trie por meio da função "createNode()" e logo a
 
 A função recursiva "palavrasSemelhantes()" primeiramente verifica questões de segurança (linha 239), depois verifica se as letras são iguais e, caso o número de erros que aconteceram for maior que o passado no arquivo "consultas.txt" então entramos em algumas verificações por meio de ifs e elses. Além disso, essa função usa outras funções auxiliares, como: "verificaIgualdadeLetra()", "caracterAtual()", "diferencaTamanhoPalavras()" e "imprimePalavraAchada()".
 
-Nosso trabalho, ignora palavras que contém caracteres especiais (como acentos, cedilhas, entre outros), pois seguimos orientações vindas do professor, em sala de aula. 
+Nosso trabalho, ignora palavras que contém caracteres especiais (como acentos, cedilhas, entre outros), pois seguimos orientações vindas do professor, em sala de aula. Durante a criação, nossas maiores dificuldades foram, inicialmente, no backtracking realizado na função "palavrasSemelhantes()" porém de acordo com testes e análises pudemos entender os bugs e erros. Logo após, enquanto debugavamos, encontramos dificuldades na lógica que foram resolvidas depois de muito esforço.
 
-Durante a criação do trabalho, nossas maiores dificuldades foram, inicialmente, no backtracking realizado na função "palavrasSemelhantes()" porém de acordo com testes e análises pudemos entender os bugs e erros. 
-
-Desde já agradecemos o seu tempo lendo este arquivo e analisando nosso código,
+Desde já, agradecemos o seu tempo lendo este arquivo e analisando nosso código,
 
 Victor e Maisa.
