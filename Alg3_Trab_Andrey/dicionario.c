@@ -26,7 +26,6 @@ char caracterAtual (nodeTrie *nodo) {
     return '?';
 }
 
-//
 void inverterVetor (char vetor[]) {
     int x = strlen(vetor) - 1;
 
@@ -38,7 +37,6 @@ void inverterVetor (char vetor[]) {
         vetor[x-i-1] = auxiliar;
     }
 }
-
 
 // Imprime palavras encontradas
 void imprimePalavraAchada (nodeTrie *nodo, FILE *outputFile, int contagem) {
