@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <ctype.h>
 
+#include "trie.h"
+
 // Aloca o nodo da trie
 nodeTrie *createNode () {
 
