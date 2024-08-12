@@ -1,7 +1,7 @@
 TRABALHO DE ALGORITMOS E ESTRUTURAS DE DADOS 3
 CI1057 - 2024-1
 
-Autores: Victor Gabriel Rodrigues da Silva (GRR20231959) e Maisa Carolina Moreno Girardi (GRR20204081)
+Autores: Maisa Carolina Moreno Girardi (GRR20204081) e Victor Gabriel Rodrigues da Silva (GRR20231959)
 
 Professor: Andrey Ricardo Pimentel
 
@@ -21,4 +21,4 @@ Seguindo as orientações do professor em sala de aula, optamos por ignorar pala
 
 Agradecemos desde já por dedicar seu tempo para ler este relatóro e analisar nosso código,
 
-Victor e Maisa.
+Maisa e Victor.
