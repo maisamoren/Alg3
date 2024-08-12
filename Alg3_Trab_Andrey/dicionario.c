@@ -97,7 +97,7 @@ int verificaIgualdadeLetra (char key1, char key2) {
 
 int palavrasSemelhantes (nodeTrie *nodo, char *key, int letraAtual, int totalLetras, int errosMax, int errosAtual, FILE *outputFile, int contagem) {
 
-    // If de seguranca para garantir que nao entre em locais da memoria indevidos (seja um nodo nulo ou um fim de vetor que nao existe)
+    // If de seguranca para garantir que nao entre em locais da memoria indevidos (seja um nodo nulo )
     if (nodo == NULL) {
         return 0;
     }
