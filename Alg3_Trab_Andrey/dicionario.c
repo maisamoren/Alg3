@@ -129,10 +129,13 @@ int palavrasSemelhantes (nodeTrie *nodo, char *key, int letraAtual, int totalLet
                 if (nodo->childNode[i] != NULL) {
                     // Chamada para proxima letra da trie apenas
                     contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual, totalLetras, errosMax, errosAtual, outputFile, contagem);
+                } else {
+                    // Chamada para proxima letra do vetor apenas
+                    contagem = contagem + palavrasSemelhantes(nodo->childNode[i], key, letraAtual + 1, totalLetras, errosMax, errosAtual, outputFile, contagem);
                 }
             }
-            // Chamada para proxima letra do vetor apenas
-            contagem = contagem + palavrasSemelhantes(nodo, key, letraAtual + 1, totalLetras, errosMax, errosAtual, outputFile, contagem);
+            /* // Chamada para proxima letra do vetor apenas
+            contagem = contagem + palavrasSemelhantes(nodo, key, letraAtual + 1, totalLetras, errosMax, errosAtual, outputFile, contagem); */
         }
 
     }
